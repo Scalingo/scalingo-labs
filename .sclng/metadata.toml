@@ -1,0 +1,6 @@
+dependencies = []
+description = "GitHub repository for demos"
+owner = "devrel@scalingo.com"
+team = "DevRel"
+tier = 2
+version = "1.2.0"
