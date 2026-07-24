@@ -170,26 +170,46 @@ const uiState = {
         const fallbackUrl = '/static/images/film-placeholder.svg';
         const imageAlt = `Poster for the film ${film.title}`;
         
-        card.innerHTML = `
-            <div class="flex items-start space-x-3 sm:space-x-4">
-                <div class="flex-shrink-0">
-                    <div class="relative">
-                        <img 
-                            alt="${imageAlt}"
-                            class="film-image w-16 h-20 sm:w-20 sm:h-28 object-cover rounded-lg shadow-md"
-                            loading="lazy"
-                        />
-                        <div class="absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
-                            ${index}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 break-words">${film.title}</h3>
-                    <p class="text-sm sm:text-base text-gray-700 leading-relaxed break-words">${film.description}</p>
-                </div>
-            </div>
-        `;
+const container = document.createElement('div');
+container.className = 'flex items-start space-x-3 sm:space-x-4';
+
+const imageWrapperOuter = document.createElement('div');
+imageWrapperOuter.className = 'flex-shrink-0';
+
+const imageWrapperInner = document.createElement('div');
+imageWrapperInner.className = 'relative';
+
+const imgElement = document.createElement('img');
+imgElement.alt = imageAlt;
+imgElement.className = 'film-image w-16 h-20 sm:w-20 sm:h-28 object-cover rounded-lg shadow-md';
+imgElement.loading = 'lazy';
+
+const badge = document.createElement('div');
+badge.className = 'absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg';
+badge.textContent = String(index);
+
+imageWrapperInner.appendChild(imgElement);
+imageWrapperInner.appendChild(badge);
+imageWrapperOuter.appendChild(imageWrapperInner);
+
+const content = document.createElement('div');
+content.className = 'flex-1 min-w-0';
+
+const title = document.createElement('h3');
+title.className = 'text-lg sm:text-xl font-bold text-gray-900 mb-2 break-words';
+title.textContent = film.title;
+
+const description = document.createElement('p');
+description.className = 'text-sm sm:text-base text-gray-700 leading-relaxed break-words';
+description.textContent = film.description;
+
+content.appendChild(title);
+content.appendChild(description);
+
+container.appendChild(imageWrapperOuter);
+container.appendChild(content);
+
+card.replaceChildren(container);
         
         // Load image with fallback
         const imgElement = card.querySelector('img');
