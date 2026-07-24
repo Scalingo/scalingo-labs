@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speech to Text Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+    h1 {
+      margin-bottom: 8px;
+    }
+    p {
+      color: #444;
+    }
+    .buttons {
+      margin: 20px 0;
+      display: flex;
+      gap: 12px;
+    }
+    button {
+      padding: 12px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #status {
+      margin: 16px 0;
+      font-weight: bold;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      min-height: 120px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Speech to Text Demo</h1>
+  <p>Click start, speak, then stop and transcribe.</p>
+
+  <div class="buttons">
+    <button id="startBtn">Start recording</button>
+    <button id="stopBtn" disabled>Stop and transcribe</button>
+  </div>
+
+  <div id="status">Status: idle</div>
+  <div id="result">Transcript will appear here.</div>
+
+  <script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let stream;
+
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const statusEl = document.getElementById("status");
+    const resultEl = document.getElementById("result");
+
+    async function checkHealth() {
+      try {
+        const res = await fetch("/health");
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        return { status: "failed", ready: false, error: String(err) };
+      }
+    }
+
+    startBtn.addEventListener("click", async () => {
+      const health = await checkHealth();
+
+      if (health.status !== "ready") {
+        statusEl.textContent = `Status: model warming up (${health.model || "unknown"})`;
+        resultEl.textContent = "Model is not ready yet. Retry in a moment.";
+        return;
+      }
+
+      try {
+        resultEl.textContent = "Transcript will appear here.";
+        statusEl.textContent = "Status: requesting microphone...";
+
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: "audio/webm"
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstart = () => {
+          statusEl.textContent = "Status: recording...";
+          startBtn.disabled = true;
+          stopBtn.disabled = false;
+        };
+
+        mediaRecorder.onstop = async () => {
+          statusEl.textContent = "Status: uploading audio...";
+          stopBtn.disabled = true;
+
+          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          const formData = new FormData();
+          formData.append("file", audioBlob, "recording.webm");
+
+          try {
+            const response = await fetch("/transcribe", {
+              method: "POST",
+              body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error || "Transcription error");
+            }
+
+            resultEl.textContent = data.text || "(no text detected)";
+            statusEl.textContent = `Status: done (${data.model})`;
+          } catch (err) {
+            console.error(err);
+            resultEl.textContent = err.message || "Error during transcription.";
+            statusEl.textContent = "Status: error";
+          } finally {
+            startBtn.disabled = false;
+            if (stream) {
+              stream.getTracks().forEach(track => track.stop());
+            }
+          }
+        };
+
+        mediaRecorder.start();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Status: microphone denied or unavailable";
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        statusEl.textContent = "Status: stopping...";
+        mediaRecorder.stop();
+      }
+    });
+  </script>
+</body>
+</html>
