@@ -1,0 +1,37 @@
+<svg width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Time portal effect -->
+  <circle cx="200" cy="150" r="80" fill="none" stroke="#fbbf24" stroke-width="3" opacity="0.6"/>
+  <circle cx="200" cy="150" r="60" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.4"/>
+  <circle cx="200" cy="150" r="40" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+  
+  <!-- DeLorean car silhouette -->
+  <path d="M120 300 L280 300 L290 320 L280 340 L120 340 L110 320 Z" fill="url(#carGradient)"/>
+  <rect x="130" y="310" width="140" height="20" fill="#1f2937" rx="2"/>
+  <circle cx="150" cy="350" r="15" fill="#374151"/>
+  <circle cx="250" cy="350" r="15" fill="#374151"/>
+  
+  <!-- Lightning bolt -->
+  <path d="M200 100 L190 130 L200 130 L195 160 L205 160 L200 130 L210 130 Z" fill="#fbbf24"/>
+  
+  <!-- Title -->
+  <text x="200" y="450" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">RETOUR VERS</text>
+  <text x="200" y="480" text-anchor="middle" fill="#fbbf24" font-family="Arial, sans-serif" font-size="28" font-weight="bold">LE FUTUR</text>
+  
+  <!-- Year -->
+  <text x="200" y="520" text-anchor="middle" fill="#fbbf24" font-family="Arial, sans-serif" font-size="18">1985</text>
+</svg>
