@@ -62,4 +62,4 @@ app.include_router(recommendations_router, tags=["recommendations"])
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def read_root(request: Request):
     """Home page with the film search interface"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
