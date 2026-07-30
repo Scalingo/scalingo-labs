@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo ">>> Cleaning up uv and other build caches..."
+
+rm -rf $HOME/.cache/uv || true
+
+rm -rf $HOME/.cache/huggingface $HOME/.cache/torch || true
+
+if [ -n "$VIRTUAL_ENV" ] && [ -d "$VIRTUAL_ENV" ]; then
+  find "$VIRTUAL_ENV/lib" -type d \( -name tests -o -name "__pycache__" \) -prune -exec rm -rf {} +
+  find "$VIRTUAL_ENV/lib" -type f -name "*.pyc" -delete
+fi
+
+echo ">>> Post-compile cleanup finished."
