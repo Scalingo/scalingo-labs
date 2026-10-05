@@ -4,18 +4,14 @@ Deploy [PostgREST] on [Scalingo] using this buildpack.
 
 ## Documentation
 
-See the official tutorial:
+See the official demo:
 👉 https://doc.scalingo.com/tutorials/postgrest
 
 ## Maintenance Status
 
-This buildpack is maintained by Scalingo solely for the deployment assets and integration guidance provided in this repository and its associated documentation.
+This repository is provided for demonstration purposes only. It is not maintained as a supported Scalingo product, reference implementation or tutorial. **Scalingo does not guarantee** that it works continuously, remains compatible over time, or is suitable for production usage.
 
-Scalingo does not administer, manage, operate, or automatically upgrade customer PostgREST instances.
-
-Applying PostgREST upgrades and security patches remains the responsibility of the customer by updating the POSTGREST_VERSION variable and redeploying the application.
-
-Should Scalingo discontinue maintenance of this buildpack or no longer recommend its use, a notice period of at least six months will be provided whenever feasible, except where immediate action is required due to security concerns or external constraints.
+This demo may include external dependencies not maintained by Scalingo. Customers are solely responsible for validating all aspects (code, security, compliance, operations), applying PostgREST upgrades and security patches by updating the `POSTGREST_VERSION` variable, and redeploying the application before any production use.
 
 [PostgREST]: https://postgrest.org/
 [Scalingo]: https://scalingo.com/
