@@ -1,0 +1,2 @@
+postdeploy: pgcontents init --no-prompt --db-url="${PGCONTENTS_DB_URL}"
+web: jupyter lab --config="${HOME}/jupyter_notebook_config.py"
