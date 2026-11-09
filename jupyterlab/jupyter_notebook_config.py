@@ -10,17 +10,17 @@ from pgcontents import PostgresContentsManager, PostgresCheckpoints
 
 c = get_config()  # noqa
 
+# Listening interface and port:
 c.ServerApp.ip = '*'
 c.ServerApp.port = int(os.getenv("PORT"))
 c.ServerApp.open_browser = False
 
+# Use authentication token set in JUPYTER_TOKEN:
 jupyter_token = os.environ.get("JUPYTER_TOKEN")
 if jupyter_token:
     c.IdentityProvider.token = jupyter_token
 
-# jupyter_passwd = os.environ.get("JUPYTER_PASSWORD")
-# if jupyter_passwd:
-#    c.ServerApp.password = passwd(jupyter_passwd)
+# Disable user-provided passwords:
 c.PasswordIdentityProvider.allow_password_change = False
 
 # Tell IPython to use PostgresContentsManager for all storage.
