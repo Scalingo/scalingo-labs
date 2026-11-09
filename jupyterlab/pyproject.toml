@@ -1,0 +1,15 @@
+[project]
+name = "my-jupyter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic<1.13",
+    "jupyterlab>=4.5.6",
+    "pgcontents",
+    "sqlalchemy[postgresql]==1.4.1",
+]
+
+[tool.uv.sources]
+pgcontents = { git = "https://github.com/addisonwurtz/pgcontents.git" }
