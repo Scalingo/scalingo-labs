@@ -1,7 +1,7 @@
 [project]
 name = "my-jupyter"
 version = "0.1.0"
-description = "Add your description here"
+description = "Run JupyterLab on Scalingo"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
