@@ -3,14 +3,17 @@
 This repository contains code used to demonstrate how to deploy [JupyterLab]
 on [Scalingo]:
 
-- `jupyter_notebook_config.py` -- Contains the configuration of JupyterLab.
-- `Procfile` -- Defines two process types to run JupyterLab:
+- `jupyter_server_config.py` \\
+  Contains the configuration of JupyterLab.
+- `Procfile` \\
+  Defines two process types to run JupyterLab:
   - `postdeploy`: initializes the database if required;
   - `web`: main process type, effectively runs JupyterLab.
-- `.profile.d/010-jupyterlab.sh` -- Ensures some required environment variable
-  are available and well set at runtime.
-- `.python-version`, `pyproject.toml`, `uv.lock` -- Define project and
-  dependencies.
+- `.profile.d/010-jupyterlab.sh` \\
+  Ensures some required environment variable are available and well set at
+  runtime.
+- `.python-version`, `pyproject.toml`, and `uv.lock` \\
+  Define project and dependencies.
 
 ## Documentation
 

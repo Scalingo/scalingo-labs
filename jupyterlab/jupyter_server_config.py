@@ -8,22 +8,22 @@ from jupyter_server.auth import passwd
 from pgcontents import PostgresContentsManager, PostgresCheckpoints
 
 
-c = get_config()  # noqa
+c = get_config()
 
-# Listening interface and port:
+# Set listening interface and port
 c.ServerApp.ip = '*'
 c.ServerApp.port = int(os.getenv("PORT"))
 c.ServerApp.open_browser = False
 
-# Use authentication token set in JUPYTER_TOKEN:
+# Use authentication token set in JUPYTER_TOKEN
 jupyter_token = os.environ.get("JUPYTER_TOKEN")
 if jupyter_token:
     c.IdentityProvider.token = jupyter_token
 
-# Disable user-provided passwords:
+# Disable user-provided passwords
 c.PasswordIdentityProvider.allow_password_change = False
 
-# Tell IPython to use PostgresContentsManager for all storage.
+# Enable PostgreSQL for all storage
 c.ServerApp.contents_manager_class = PostgresContentsManager
 
 # Set the url for the database used to store files.  See
