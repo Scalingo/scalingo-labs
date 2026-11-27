@@ -15,7 +15,35 @@ import (
 	"time"
 )
 
+// Max. file size is 10 MiB
 const maxFileSize = 10 * 1024 * 1024
+
+
+func main() {
+	clamavHost := os.Getenv("CLAMAV_HOST")
+	if clamavHost == "" {
+		log.Fatal("CLAMAV_HOST is required")
+	}
+	clamavPort := os.Getenv("CLAMAV_PORT")
+	if clamavPort == "" {
+		clamavPort = "3310"
+	}
+	clamavPortNumber, err := strconv.Atoi(clamavPort)
+	if err != nil || clamavPortNumber < 1 || clamavPortNumber > 65535 {
+		log.Fatal("CLAMAV_PORT must be a port number between 1 and 65535")
+	}
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	server := &http.Server{
+		Addr:              net.JoinHostPort("", port),
+		Handler:           scanHandler(net.JoinHostPort(clamavHost, strconv.Itoa(clamavPortNumber))),
+		ReadHeaderTimeout: 10 * time.Second,
+	}
+	log.Printf("Listening on %s", server.Addr)
+	log.Fatal(server.ListenAndServe())
+}
 
 // scanFile streams a file using ClamAV's INSTREAM protocol.
 func scanFile(address string, file io.Reader) (string, error) {
@@ -160,30 +188,4 @@ func scanHandler(address string) http.Handler {
 			})
 		}
 	})
-}
-
-func main() {
-	host := os.Getenv("CLAMAV_HOST")
-	if host == "" {
-		log.Fatal("CLAMAV_HOST is required")
-	}
-	clamPort := os.Getenv("CLAMAV_PORT")
-	if clamPort == "" {
-		clamPort = "3310"
-	}
-	portNumber, err := strconv.Atoi(clamPort)
-	if err != nil || portNumber < 1 || portNumber > 65535 {
-		log.Fatal("CLAMAV_PORT must be a port number between 1 and 65535")
-	}
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	server := &http.Server{
-		Addr:              net.JoinHostPort("", port),
-		Handler:           scanHandler(net.JoinHostPort(host, strconv.Itoa(portNumber))),
-		ReadHeaderTimeout: 10 * time.Second,
-	}
-	log.Printf("Listening on %s", server.Addr)
-	log.Fatal(server.ListenAndServe())
 }
