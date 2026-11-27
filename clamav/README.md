@@ -1,7 +1,7 @@
 # ClamAV File-Scanning API
 
 This very small app allows to test a ClamAV deployment, such as the one we
-describe in our [ClamAV tutorial][clamav-tutorial].
+describe in Scalingo [ClamAV tutorial][clamav-tutorial].
 
 The app provides a simple HTTP endpoint for checking files for malware, using
 ClamAV. It accepts a multipart file upload in the file field of a `POST`
@@ -21,7 +21,7 @@ specified by `CLAMAV_HOST` and `CLAMAV_PORT` (default: `3310`) and listens on
 1. Sparse-checkout the `scalingo-labs` repository, and extend it by downloading
    the directory containing the code for this demo:
    ```shell
-   git clone --sparse https://github.com/Scalingo/scalingo-loabs
+   git clone --sparse https://github.com/Scalingo/scalingo-labs
    cd scalingo-labs
    git sparse-checkout set clamav
    cd clamav
@@ -48,6 +48,25 @@ specified by `CLAMAV_HOST` and `CLAMAV_PORT` (default: `3310`) and listens on
      This would allow the app to benefit from multiple ClamAV containers, if
      you were to scale horizontally.
 
+     To retrieve this domain name using the CLI:
+     ```shell
+     scalingo --app my-clamav private-networks-domain-names
+     ```
+
+     The output should look like this:
+     ```shell
+     ┌────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+     │ CONTAINER TYPE │                                                    DOMAIN NAME                                                     │
+     ├────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+     │ clamav         │ clamav.ap-588c4c3e-f454-4379-903b-a6eab01f8291.pn-5b3a072d-dd14-4a05-821c-0c2754acef04.private-network.internal.   │
+     │ clamav         │ 1.clamav.ap-588c4c3e-f454-4379-903b-a6eab01f8291.pn-5b3a072d-dd14-4a05-821c-0c2754acef04.private-network.internal. │
+     └────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+     ```
+
+     Avoid using the domain name starting with a number, which designates a
+     precise single container. Instead, use the one starting with the process
+     type name, which designates the pool of available containers.
+
    - For `$port`, use the one defined in your ClamAV app, or use the default
      one (`3310`).
 
@@ -58,7 +77,7 @@ specified by `CLAMAV_HOST` and `CLAMAV_PORT` (default: `3310`) and listens on
 
 5. Trigger a deployment to Scalingo:
    ```shell
-   git push scalingo master
+   git push scalingo main
    ```
 
 6. Test everyting is working:
